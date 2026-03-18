@@ -1,0 +1,16 @@
+{
+  "name": "moodbloom-landing-page",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mood Bloom landing page ready for Netlify hosting.",
+  "scripts": {
+    "start": "npx netlify dev"
+  },
+  "dependencies": {
+    "@netlify/functions": "^3.1.5",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "netlify-cli": "^22.2.1"
+  }
+}

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood Bloom - Mood Journal</title>
+  <style>
+    :root {
+      --cream: #fff8f3;
+      --sand: #f8eee7;
+      --blush: #ffd9de;
+      --rose: #ef8fa4;
+      --petal: #f6a97a;
+      --lavender: #e9dcff;
+      --violet: #8d79bf;
+      --sage: #cfe8cf;
+      --leaf: #6f9273;
+      --ink: #3b2d3a;
+      --muted: #786877;
+      --card: rgba(255, 252, 249, 0.74);
+      --card-strong: rgba(255, 251, 247, 0.92);
+      --line: rgba(97, 71, 88, 0.09);
+      --shadow: 0 28px 60px rgba(123, 88, 105, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(246, 169, 122, 0.32), transparent 20%),
+        radial-gradient(circle at 86% 14%, rgba(141, 121, 191, 0.18), transparent 18%),
+        radial-gradient(circle at 74% 62%, rgba(207, 232, 207, 0.42), transparent 20%),
+        linear-gradient(180deg, #fffdfb 0%, var(--cream) 36%, var(--sand) 100%);
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(255, 248, 243, 0.72);
+      border-bottom: 1px solid rgba(97, 71, 88, 0.06);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 1.08rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--rose), var(--petal));
+      color: white;
+      box-shadow: 0 14px 28px rgba(239, 143, 164, 0.28);
+      font-size: 1.1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--rose), #de7892 65%, var(--petal));
+      box-shadow: 0 18px 34px rgba(239, 143, 164, 0.3);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: rgba(255, 252, 249, 0.84);
+      border: 1px solid rgba(97, 71, 88, 0.08);
+      box-shadow: 0 12px 26px rgba(123, 88, 105, 0.08);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 54px 0 92px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255, 252, 249, 0.75);
+      border: 1px solid rgba(239, 143, 164, 0.18);
+      color: #b5677c;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+
+    .hero h1 {
+      margin-top: 18px;
+      font-size: clamp(3.2rem, 6vw, 5.8rem);
+      line-height: 0.92;
+      max-width: 8ch;
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      max-width: 600px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .hero-notes {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .note-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 252, 249, 0.78);
+      border: 1px solid rgba(97, 71, 88, 0.07);
+      color: #8b7382;
+      font-size: 0.92rem;
+    }
+
+    .phone-scene {
+      position: relative;
+      min-height: 670px;
+      display: grid;
+      place-items: center;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(6px);
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    .orb.one {
+      width: 180px;
+      height: 180px;
+      background: rgba(246, 169, 122, 0.35);
+      top: 50px;
+      left: 0;
+    }
+
+    .orb.two {
+      width: 210px;
+      height: 210px;
+      background: rgba(141, 121, 191, 0.2);
+      right: 10px;
+      top: 130px;
+    }
+
+    .orb.three {
+      width: 160px;
+      height: 160px;
+      background: rgba(207, 232, 207, 0.42);
+      bottom: 72px;
+      left: 36px;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 360px);
+      padding: 14px;
+      border-radius: 40px;
+      background: linear-gradient(180deg, #45364f, #211a2b);
+      box-shadow: 0 34px 60px rgba(49, 33, 48, 0.25);
+      transform: rotate(-6deg);
+    }
+
+    .phone-screen {
+      overflow: hidden;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.32), transparent 30%),
+        linear-gradient(180deg, #fff8f5 0%, #f6eee6 100%);
+      min-height: 640px;
+      padding: 22px 20px 18px;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7c6775;
+      margin-bottom: 18px;
+    }
+
+    .app-card {
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 0 14px 28px rgba(138, 109, 122, 0.08);
+      margin-bottom: 14px;
+    }
+
+    .app-card h3 {
+      font-size: 1.32rem;
+      margin-bottom: 10px;
+    }
+
+    .mini {
+      color: #8f7684;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .mood-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mood-chip {
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .mood-chip.rose {
+      background: rgba(239, 143, 164, 0.16);
+      color: #ba5d76;
+    }
+
+    .mood-chip.peach {
+      background: rgba(246, 169, 122, 0.2);
+      color: #b27147;
+    }
+
+    .mood-chip.sage {
+      background: rgba(111, 146, 115, 0.14);
+      color: #5c7f60;
+    }
+
+    .quote-card {
+      background: linear-gradient(135deg, rgba(233, 220, 255, 0.7), rgba(255, 217, 222, 0.54));
+    }
+
+    .quote-card blockquote {
+      margin: 10px 0 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      line-height: 1.32;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .bar-line {
+      display: grid;
+      grid-template-columns: 90px 1fr 42px;
+      gap: 10px;
+      align-items: center;
+      color: #7f6a78;
+      font-size: 0.9rem;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(97, 71, 88, 0.08);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--rose), var(--petal));
+    }
+
+    .dock {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+      padding: 10px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .dock div {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(97, 71, 88, 0.12);
+    }
+
+    .dock .active {
+      background: linear-gradient(90deg, var(--rose), var(--petal));
+    }
+
+    .floating-card {
+      position: absolute;
+      right: -8px;
+      bottom: 92px;
+      width: 220px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 252, 249, 0.82);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: var(--shadow);
+    }
+
+    .floating-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .floating-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.65;
+    }
+
+    .section {
+      padding: 92px 0;
+    }
+
+    .section-intro {
+      max-width: 720px;
+      margin: 0 auto 36px;
+      text-align: center;
+    }
+
+    .section-intro h2 {
+      font-size: clamp(2.2rem, 4vw, 3.6rem);
+      line-height: 0.98;
+    }
+
+    .section-intro p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 1.04rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card,
+    .trust-box,
+    .signup-panel,
+    .gallery-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .feature-card {
+      padding: 26px;
+      border-radius: 28px;
+    }
+
+    .feature-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, rgba(239, 143, 164, 0.18), rgba(246, 169, 122, 0.18));
+    }
+
+    .feature-tag {
+      color: #b36f83;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .feature-card h3 {
+      font-size: 1.55rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .gallery-shell {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .gallery-card {
+      border-radius: 32px;
+      padding: 28px;
+    }
+
+    .gallery-card h3 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .gallery-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .gallery-meta {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .gallery-meta div {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.56);
+      color: #836f7c;
+      font-size: 0.94rem;
+    }
+
+    .shot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .shot-card {
+      padding: 12px;
+      border-radius: 28px;
+      background: rgba(255, 252, 249, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 36px rgba(123, 88, 105, 0.12);
+      transition: transform 0.22s ease;
+    }
+
+    .shot-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .shot-card img {
+      aspect-ratio: 9 / 19;
+      object-fit: cover;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(233, 220, 255, 0.7), rgba(255, 217, 222, 0.76));
+    }
+
+    .trust-box {
+      border-radius: 34px;
+      padding: 34px;
+      text-align: center;
+    }
+
+    .trust-box h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 14px;
+    }
+
+    .trust-box p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    .signup-shell {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .signup-panel {
+      padding: 32px;
+      border-radius: 32px;
+    }
+
+    .signup-kicker {
+      color: #b36f83;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .signup-panel h2 {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 0.98;
+    }
+
+    .signup-panel p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .signup-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .signup-form input {
+      flex: 1 1 280px;
+      min-width: 0;
+      border: 1px solid rgba(97, 71, 88, 0.12);
+      border-radius: 999px;
+      padding: 16px 18px;
+      background: var(--card-strong);
+      color: var(--ink);
+      font-size: 15px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .signup-form input:focus {
+      border-color: rgba(239, 143, 164, 0.45);
+      box-shadow: 0 0 0 4px rgba(239, 143, 164, 0.12);
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 14px;
+      color: #8d7481;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .status.success {
+      color: #547456;
+    }
+
+    .status.error {
+      color: #b24e61;
+    }
+
+    .signup-points {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .signup-points div {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.55);
+      color: #7d6977;
+      line-height: 1.6;
+    }
+
+    .footer {
+      padding: 28px 0 44px;
+      text-align: center;
+      color: #8e7784;
+      font-size: 0.92rem;
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-copy,
+    .hero-actions,
+    .hero-notes,
+    .phone,
+    .floating-card,
+    .feature-card,
+    .gallery-card,
+    .shot-card,
+    .trust-box,
+    .signup-panel {
+      animation: floatIn 0.7s ease both;
+    }
+
+    .feature-card:nth-child(2),
+    .shot-card:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    .feature-card:nth-child(3),
+    .shot-card:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    .shot-card:nth-child(4) {
+      animation-delay: 0.24s;
+    }
+
+    .shot-card:nth-child(5) {
+      animation-delay: 0.32s;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .gallery-shell,
+      .signup-shell,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        transform: none;
+      }
+
+      .floating-card {
+        right: 10px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .hero {
+        padding: 34px 0 72px;
+      }
+
+      .phone-scene {
+        min-height: auto;
+      }
+
+      .floating-card {
+        position: static;
+        width: 100%;
+        margin-top: 16px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .nav-links a:not(.btn) {
+        display: none;
+      }
+
+      .hero h1,
+      .section-intro h2,
+      .signup-panel h2,
+      .trust-box h2 {
+        line-height: 1.02;
+      }
+
+      .btn,
+      .signup-form input,
+      .signup-form button {
+        width: 100%;
+      }
+
+      .site-header {
+        position: static;
+      }
+
+      .feature-card,
+      .gallery-card,
+      .signup-panel,
+      .trust-box {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="brand-mark">✿</span>
+        <span>Mood Bloom</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#preview">Preview</a>
+        <a href="#signup" class="btn btn-secondary">Join Beta</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Journal softly. Notice more.</div>
+        <h1>A mood journal that feels like part of your self-care ritual.</h1>
+        <p class="hero-copy">Mood Bloom brings together emotional check-ins, AI encouragement, and pattern tracking in a calm, uplifting flow designed to feel like the app itself from the first scroll.</p>
+        <div class="hero-actions">
+          <a href="#signup" class="btn btn-primary">Join Beta Testing</a>
+          <a href="https://play.google.com/store/apps/details?id=space.manus.moodjournal.t20260309042142" class="btn btn-secondary" target="_blank" rel="noreferrer">Download Android Beta</a>
+        </div>
+        <div class="hero-notes">
+          <div class="note-pill">Free lifetime premium for beta testers</div>
+          <div class="note-pill">Private daily reflection</div>
+          <div class="note-pill">AI-guided encouragement</div>
+        </div>
+      </div>
+
+      <div class="phone-scene">
+        <div class="orb one"></div>
+        <div class="orb two"></div>
+        <div class="orb three"></div>
+
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span>9:41</span>
+              <span>Mood Bloom</span>
+            </div>
+
+            <div class="app-card">
+              <div class="mini">Good evening</div>
+              <h3>How is your heart feeling today?</h3>
+              <div class="mood-cloud">
+                <span class="mood-chip rose">Hopeful</span>
+                <span class="mood-chip peach">Tired</span>
+                <span class="mood-chip sage">Calm</span>
+              </div>
+            </div>
+
+            <div class="app-card quote-card">
+              <div class="mini">Today’s AI reflection</div>
+              <blockquote>Small check-ins can turn a hard week into a clearer one.</blockquote>
+            </div>
+
+            <div class="app-card">
+              <div class="mini">Your weekly pattern</div>
+              <div class="bar-row">
+                <div class="bar-line">
+                  <span>After rest</span>
+                  <div class="bar"><div class="bar-fill" style="width: 84%;"></div></div>
+                  <strong>84%</strong>
+                </div>
+                <div class="bar-line">
+                  <span>Late nights</span>
+                  <div class="bar"><div class="bar-fill" style="width: 38%;"></div></div>
+                  <strong>38%</strong>
+                </div>
+                <div class="bar-line">
+                  <span>Outdoor days</span>
+                  <div class="bar"><div class="bar-fill" style="width: 72%;"></div></div>
+                  <strong>72%</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="dock">
+              <div></div>
+              <div class="active"></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-card">
+          <strong>Built for daily calm</strong>
+          <p>Gentle colors, short prompts, and a simple habit loop make reflection feel approachable instead of overwhelming.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="section" id="features">
+      <div class="section-intro">
+        <h2>The landing page now feels like the product.</h2>
+        <p>Instead of a generic promo layout, Mood Bloom now leans into the warm, journaling-first atmosphere of the app with soft depth, emotional language, and mobile-inspired surfaces.</p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-top">
+            <div class="feature-icon">✦</div>
+            <div class="feature-tag">Daily check-ins</div>
+          </div>
+          <h3>Mood tracking with less friction</h3>
+          <p>Quick emotional labels, reflective prompts, and a soft visual system make it easier to return every day without the experience feeling clinical.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-top">
+            <div class="feature-icon">☼</div>
+            <div class="feature-tag">AI support</div>
+          </div>
+          <h3>Encouragement that feels personal</h3>
+          <p>Motivational quotes and thoughtful prompts help users feel seen, supported, and more aware of how their inner world changes over time.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-top">
+            <div class="feature-icon">⌘</div>
+            <div class="feature-tag">Patterns</div>
+          </div>
+          <h3>Growth you can actually notice</h3>
+          <p>Streaks, insights, and simple pattern summaries turn journaling history into something useful, motivating, and emotionally clear.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="preview">
+      <div class="gallery-shell">
+        <div class="gallery-card">
+          <h3>Screen flow preview</h3>
+          <p>The screenshot area is framed like an extension of the app, so once your exported screens are in place this section will feel much more integrated with the rest of the experience.</p>
+          <div class="gallery-meta">
+            <div>Warm pastel surfaces to mirror the product UI</div>
+            <div>Tall rounded frames to echo mobile device proportions</div>
+            <div>Gentle hover motion to keep the section feeling alive</div>
+          </div>
+        </div>
+
+        <div class="shot-grid">
+          <div class="shot-card"><img src="Untitled design (5).png" alt="Mood Bloom welcome screen" /></div>
+          <div class="shot-card"><img src="Untitled design (6).png" alt="Mood Bloom emotion logging screen" /></div>
+          <div class="shot-card"><img src="Untitled design (7).png" alt="Mood Bloom patterns and points screen" /></div>
+          <div class="shot-card"><img src="Untitled design (8).png" alt="Mood Bloom inspiration screen" /></div>
+          <div class="shot-card"><img src="Untitled design (9).png" alt="Mood Bloom motivation and streaks screen" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="trust-box">
+        <h2>Private by default, gentle by design.</h2>
+        <p>Mood Bloom is built to support honest reflection with a softer emotional tone. Beta signup requests are sent directly through the live email flow, and the journaling experience is positioned around care, consistency, and privacy.</p>
+      </div>
+    </section>
+
+    <section class="section" id="signup">
+      <div class="signup-shell">
+        <div class="signup-panel">
+          <div class="signup-kicker">Beta Access</div>
+          <h2>Join early and help shape Mood Bloom.</h2>
+          <p>Join the waitlist, let the Mood Bloom team review your request, and then receive the Google Play beta link by email once you are added as a tester.</p>
+          <div class="signup-points">
+            <div>Every signup is sent directly to MoodbloomJournal.app@gmail.com</div>
+            <div>You can add testers manually after reviewing the request</div>
+            <div>You can reply later with the Google Play beta link</div>
+          </div>
+        </div>
+
+        <div class="signup-panel">
+          <div class="signup-kicker">Request Invite</div>
+          <h2>Get your beta invite.</h2>
+          <p>Enter your email below and Mood Bloom will send your request to MoodbloomJournal.app@gmail.com so the team can add you to testing and email you the download link.</p>
+
+          <form class="signup-form" id="signup-form">
+            <input id="email" name="email" type="email" placeholder="Enter your email address" autocomplete="email" required />
+            <button type="submit" class="btn btn-primary" id="submit-button">Get Early Access</button>
+          </form>
+
+          <div class="status" id="form-status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    &copy; 2026 Mood Bloom
+  </footer>
+
+  <script>
+    const form = document.getElementById("signup-form");
+    const emailInput = document.getElementById("email");
+    const submitButton = document.getElementById("submit-button");
+    const status = document.getElementById("form-status");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = emailInput.value.trim();
+      if (!email) {
+        status.textContent = "Please enter your email address.";
+        status.className = "status error";
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+      status.textContent = "Submitting your beta request...";
+      status.className = "status";
+
+      try {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.error || "We could not submit your request.");
+        }
+
+        form.reset();
+        status.textContent = payload.message || "You are on the beta list. Check your inbox soon.";
+        status.className = "status success";
+      } catch (error) {
+        status.textContent = error.message || "Something went wrong. Please try again.";
+        status.className = "status error";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Get Early Access";
+      }
+    });
+  </script>
+</body>
+</html>
